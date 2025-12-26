@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalMat: {fileID: 2100000, guid: 143b8e1f24d743848980dd5758fa3238, type: 2}
+  glowIntensity: 30
   greenLight: {fileID: 2800000, guid: 13ebf555d4c866445a1d1db703d43519, type: 3}
   yellowLight: {fileID: 2800000, guid: d98696c9480307e4b8f6575520f25df4, type: 3}
   redLight: {fileID: 2800000, guid: 2adc44b8f8734a5469ce9af594f14fe0, type: 3}
