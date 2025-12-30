@@ -1,43 +1,53 @@
-using UnityEngine;
 using Seagull.City_03.SceneProps;
 using System.Collections;
+using UnityEngine;
 
 public class PedestrianTrafficTimer : MonoBehaviour
 {
-    [Header("Child References")]
     public GlowLight redLight;
     public GlowLight greenLight;
 
     [Header("Timing Settings")]
-    public float greenDuration = 5f;
-    public float redDuration = 5f;
+    public float greenLightDuration = 5f;
+    public float redLightDuration = 5f;
 
-    private void Start()
+    private Coroutine internalTimer;
+
+    void Start()
     {
-        // Safety check to ensure you assigned the children in the Inspector
-        if (redLight == null || greenLight == null)
-        {
-            Debug.LogError("PedestrianTrafficTimer: Please assign Red and Green GlowLight children!");
-            return;
-        }
-
-        StartCoroutine(TrafficCycle());
+        internalTimer = StartCoroutine(TrafficLoop());
     }
 
-    private IEnumerator TrafficCycle()
+    private IEnumerator TrafficLoop()
     {
         while (true)
         {
-            // STATE: Green (Walk)
-            // Uses the turnOn/Off methods from your GlowLight script
             greenLight.turnOn();
             redLight.turnOff();
-            yield return new WaitForSeconds(greenDuration);
+            yield return new WaitForSeconds(greenLightDuration);
 
-            // STATE: Red (Stop)
             greenLight.turnOff();
             redLight.turnOn();
-            yield return new WaitForSeconds(redDuration);
+            yield return new WaitForSeconds(redLightDuration);
+        }
+    }
+
+    // NEW CLEANER FUNCTION FOR THE MASTER
+    public void SetStateManual(string color)
+    {
+        // Stop the internal timer immediately
+        if (internalTimer != null) StopCoroutine(internalTimer);
+        this.enabled = false; // Disable this script component to prevent restarts
+
+        if (color.ToLower() == "green")
+        {
+            greenLight.turnOn();
+            redLight.turnOff();
+        }
+        else
+        {
+            greenLight.turnOff();
+            redLight.turnOn();
         }
     }
 }

@@ -5,7 +5,7 @@ public class TrafficLight : MonoBehaviour
 {
     [Header("Material Settings")]
     public Material originalMat;
-    public float glowIntensity = 30.0f; // Kept at your preferred 30!
+    public float glowIntensity = 30.0f;
 
     [Header("State Textures")]
     public Texture2D greenLight;
@@ -27,9 +27,19 @@ public class TrafficLight : MonoBehaviour
 
     void Start()
     {
-        mat = Instantiate(originalMat);
-        GetComponent<Renderer>().material = mat;
+        // Initialize if not already done by SetStateManual
+        if (mat == null) InitializeMaterial();
         SetLightState();
+    }
+
+    // New helper method to handle material setup safely
+    private void InitializeMaterial()
+    {
+        if (originalMat != null)
+        {
+            mat = Instantiate(originalMat);
+            GetComponent<Renderer>().material = mat;
+        }
     }
 
     public void SetLightState()
@@ -42,10 +52,12 @@ public class TrafficLight : MonoBehaviour
             TurnOffLight();
     }
 
-    // THIS IS THE NEW FUNCTION THE MASTER CONTROLLER CALLS
+    // UPDATED: This now checks for material initialization to prevent NullReference errors
     public void SetStateManual(string color)
     {
-        currentState = LightState.Manual; // Stop the internal timer
+        if (mat == null) InitializeMaterial();
+
+        currentState = LightState.Manual;
         if (lightCoroutine != null) StopCoroutine(lightCoroutine);
 
         switch (color.ToLower())
@@ -72,14 +84,20 @@ public class TrafficLight : MonoBehaviour
 
     private void SetEmissionTexture(Texture2D lightTexture)
     {
-        mat.SetTexture("_EmissionMap", lightTexture);
-        mat.SetColor("_EmissionColor", Color.white * glowIntensity);
-        mat.EnableKeyword("_EMISSION");
+        if (mat != null && lightTexture != null)
+        {
+            mat.SetTexture("_EmissionMap", lightTexture);
+            mat.SetColor("_EmissionColor", Color.white * glowIntensity);
+            mat.EnableKeyword("_EMISSION");
+        }
     }
 
     private void TurnOffLight()
     {
-        mat.SetColor("_EmissionColor", Color.black);
-        mat.DisableKeyword("_EMISSION");
+        if (mat != null)
+        {
+            mat.SetColor("_EmissionColor", Color.black);
+            mat.DisableKeyword("_EMISSION");
+        }
     }
 }

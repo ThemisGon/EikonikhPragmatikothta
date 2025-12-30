@@ -2,33 +2,79 @@ using UnityEngine;
 
 public class CarAI : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public Transform[] waypoints;
-    public float speed = 5f;
+    public float speed = 8f;
+    public float rotationSpeed = 10f;
+    public bool destroyAtEnd = false; // Check this for spawning cars
+
+    [Header("Detection Settings")]
+    public float sensorDistance = 5f;
+    public LayerMask obstacleLayer; // Set to 'Default' or 'Car' in Inspector
+    public string stopZoneTag = "StopZone";
+
     private int currentWaypointIndex = 0;
-    private bool isStopped = false;
+    private bool isStoppedByLight = false;
+    private GameObject currentBlockingCube;
 
     void Update()
     {
-        if (isStopped) return;
+        if (waypoints == null || waypoints.Length == 0) return;
 
-        Transform target = waypoints[currentWaypointIndex];
-        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-        transform.LookAt(target.position);
-
-        if (Vector3.Distance(transform.position, target.position) < 0.2f)
+        // 1. RESTART LOGIC: Check if the blocking cube was disabled by Master
+        if (isStoppedByLight)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            if (currentBlockingCube == null || !currentBlockingCube.activeInHierarchy)
+            {
+                isStoppedByLight = false;
+                currentBlockingCube = null;
+            }
+        }
+
+        // 2. CAR DETECTION: Look ahead for other cars
+        bool isBlockedByCar = Physics.Raycast(transform.position + transform.forward, transform.forward, sensorDistance, obstacleLayer);
+
+        if (isStoppedByLight || isBlockedByCar) return;
+
+        // 3. MOVEMENT & ROTATION
+        Transform target = waypoints[currentWaypointIndex];
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        // 4. WAYPOINT SWITCHING & DESPAWNING
+        if (Vector3.Distance(transform.position, target.position) < 0.5f)
+        {
+            if (currentWaypointIndex == waypoints.Length - 1)
+            {
+                if (destroyAtEnd) Destroy(gameObject);
+                else currentWaypointIndex = 0; // Loop for circling cars
+            }
+            else
+            {
+                currentWaypointIndex++;
+            }
         }
     }
 
-    // Detect the Stop Zone from the Master Controller
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("StopZone")) isStopped = true;
+        if (other.CompareTag(stopZoneTag))
+        {
+            isStoppedByLight = true;
+            currentBlockingCube = other.gameObject;
+        }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnDrawGizmos() // Visual sensor in Scene View
     {
-        if (other.CompareTag("StopZone")) isStopped = false;
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position + transform.forward, transform.forward * sensorDistance);
     }
 }

@@ -1,28 +1,26 @@
 using UnityEngine;
 using System.Collections;
-using Seagull.City_03.SceneProps;
+using System.Collections.Generic;
 
 public class MasterIntersectionController : MonoBehaviour
 {
-    [Header("Lights")]
-    public TrafficLight carLight;
-    public PedestrianTrafficTimer pedLight; // Uses your standalone script
+    [Header("Group A (North-South)")]
+    public List<TrafficLight> carLightsA;
+    public List<PedestrianTrafficTimer> pedLightsA;
+    public List<GameObject> stopZonesA;
 
-    [Header("Logic Settings")]
-    public bool carIsPriority = true;
-    public float carGreenTime = 10f;
-    public float pedGreenTime = 7f;
+    [Header("Group B (East-West)")]
+    public List<TrafficLight> carLightsB;
+    public List<PedestrianTrafficTimer> pedLightsB;
+    public List<GameObject> stopZonesB;
+
+    [Header("Timing Settings")]
+    public float groupAGreenTime = 10f;
+    public float groupBGreenTime = 10f;
     public float yellowTransition = 2f;
-
-    [Header("AI Control")]
-    public GameObject stopZone; // A collider that cars will detect
 
     private void Start()
     {
-        // Stop the individual timers on the lights so they don't fight this controller
-        carLight.currentState = TrafficLight.LightState.Off;
-        pedLight.enabled = false;
-
         StartCoroutine(IntersectionLoop());
     }
 
@@ -30,23 +28,34 @@ public class MasterIntersectionController : MonoBehaviour
     {
         while (true)
         {
-            // STATE 1: CARS MOVING (Car Green, Ped Red)
-            stopZone.SetActive(false); // Let cars pass
-            carLight.SetStateManual("Green"); // We will add this small method to your script
-            pedLight.redLight.turnOn();
-            pedLight.greenLight.turnOff();
-            yield return new WaitForSeconds(carGreenTime);
+            // Group A GREEN / Group B RED
+            UpdateIntersection("Green", "Red");
+            yield return new WaitForSeconds(groupAGreenTime);
 
-            // STATE 2: CARS WARNING (Car Yellow, Ped Red)
-            carLight.SetStateManual("Yellow");
+            // Group A YELLOW
+            UpdateIntersection("Yellow", "Red");
             yield return new WaitForSeconds(yellowTransition);
 
-            // STATE 3: PEDESTRIANS CROSSING (Car Red, Ped Green)
-            stopZone.SetActive(true); // Tell cars to stop
-            carLight.SetStateManual("Red");
-            pedLight.redLight.turnOff();
-            pedLight.greenLight.turnOn();
-            yield return new WaitForSeconds(pedGreenTime);
+            // Group B GREEN / Group A RED
+            UpdateIntersection("Red", "Green");
+            yield return new WaitForSeconds(groupBGreenTime);
+
+            // Group B YELLOW
+            UpdateIntersection("Red", "Yellow");
+            yield return new WaitForSeconds(yellowTransition);
         }
+    }
+
+    private void UpdateIntersection(string colorA, string colorB)
+    {
+        // Set Group A
+        foreach (var c in carLightsA) if (c != null) c.SetStateManual(colorA);
+        foreach (var p in pedLightsA) if (p != null) p.SetStateManual(colorA == "Red" ? "Green" : "Red");
+        foreach (var z in stopZonesA) if (z != null) z.SetActive(colorA == "Red");
+
+        // Set Group B
+        foreach (var c in carLightsB) if (c != null) c.SetStateManual(colorB);
+        foreach (var p in pedLightsB) if (p != null) p.SetStateManual(colorB == "Red" ? "Green" : "Red");
+        foreach (var z in stopZonesB) if (z != null) z.SetActive(colorB == "Red");
     }
 }
