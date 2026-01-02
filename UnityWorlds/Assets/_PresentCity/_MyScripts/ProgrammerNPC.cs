@@ -13,9 +13,8 @@ public class ProgrammerNPC : MonoBehaviour
     public Text buttonBText;
     public Text buttonCText;
 
-    // --- NEW: The Interact Prompt ---
-    public GameObject interactPrompt; // Drag your "Press E" text here
-    // --------------------------------
+    // The "Press E" text object
+    public GameObject interactPrompt;
 
     [Header("Riddle Data")]
     [TextArea] public string questionText = "Question here";
@@ -24,6 +23,10 @@ public class ProgrammerNPC : MonoBehaviour
     public string optionC = "C";
     public int correctOption = 1;
     [TextArea] public string successHint = "Correct!";
+
+    // --- NEW: Custom Messages ---
+    [TextArea] public string lockedMessage = "I can't talk to you yet. Help the others first.";
+    [TextArea] public string alreadyDoneMessage = "We are already done here. Move along.";
 
     private bool isPlayerClose = false;
 
@@ -37,24 +40,22 @@ public class ProgrammerNPC : MonoBehaviour
 
     void TryToTalk()
     {
+        // We still keep this logic here to prevent opening the window if locked
         if (GameBrain.instance.currentStage == myID)
         {
             OpenRiddle();
         }
-        else if (GameBrain.instance.currentStage < myID)
-        {
-            Debug.Log("I can't talk to you yet.");
-        }
         else
         {
-            Debug.Log("We are already done.");
+            // If they press E while locked/done, we just ensure the text is correct again
+            CheckStatusAndUpdateText();
         }
     }
 
     void OpenRiddle()
     {
         dialoguePanel.SetActive(true);
-        if (interactPrompt != null) interactPrompt.SetActive(false); // Hide the "E" prompt while talking
+        if (interactPrompt != null) interactPrompt.SetActive(false); // Hide the prompt entirely
 
         mainTextField.text = questionText;
         buttonAText.text = optionA;
@@ -70,7 +71,7 @@ public class ProgrammerNPC : MonoBehaviour
         if (choice == correctOption)
         {
             mainTextField.text = successHint;
-            GameBrain.instance.CompleteStage(); // THIS SAVES THE PROGRESS!
+            GameBrain.instance.CompleteStage();
 
             // Hide buttons
             buttonAText.transform.parent.gameObject.SetActive(false);
@@ -88,8 +89,41 @@ public class ProgrammerNPC : MonoBehaviour
         dialoguePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
 
-        // Show the "E" prompt again if we are still close
-        if (isPlayerClose && interactPrompt != null) interactPrompt.SetActive(true);
+        // Show the prompt again if we are still close
+        if (isPlayerClose && interactPrompt != null)
+        {
+            interactPrompt.SetActive(true);
+            CheckStatusAndUpdateText(); // Check again in case we just finished the quest!
+        }
+    }
+
+    // --- THIS IS THE HELPER FUNCTION THAT FIXES YOUR ISSUE ---
+    void CheckStatusAndUpdateText()
+    {
+        if (interactPrompt == null) return;
+
+        Text promptText = interactPrompt.GetComponent<Text>();
+        if (promptText != null)
+        {
+            // 1. Am I Locked? (Too early)
+            if (GameBrain.instance.currentStage < myID)
+            {
+                promptText.text = lockedMessage;
+                promptText.color = Color.red;
+            }
+            // 2. Am I Done? (Too late)
+            else if (GameBrain.instance.currentStage > myID)
+            {
+                promptText.text = alreadyDoneMessage;
+                promptText.color = Color.green;
+            }
+            // 3. My Turn? (Just right)
+            else
+            {
+                promptText.text = "Press E to talk to the NPC";
+                promptText.color = Color.white;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -97,7 +131,12 @@ public class ProgrammerNPC : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerClose = true;
-            if (interactPrompt != null) interactPrompt.SetActive(true); // Show "Press E"
+            if (interactPrompt != null)
+            {
+                interactPrompt.SetActive(true);
+                // CALL THE SMART CHECK IMMEDIATELY!
+                CheckStatusAndUpdateText();
+            }
         }
     }
 
@@ -107,7 +146,7 @@ public class ProgrammerNPC : MonoBehaviour
         {
             isPlayerClose = false;
             dialoguePanel.SetActive(false);
-            if (interactPrompt != null) interactPrompt.SetActive(false); // Hide "Press E"
+            if (interactPrompt != null) interactPrompt.SetActive(false);
         }
     }
 }
