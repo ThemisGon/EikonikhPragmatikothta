@@ -2384,7 +2384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6545826220204481998, guid: ee84bea1abb791d4e89bed81eed11489, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.6
+      value: 32.29
       objectReference: {fileID: 0}
     - target: {fileID: 6545826220204481998, guid: ee84bea1abb791d4e89bed81eed11489, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10828,7 +10828,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 435573518}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 812540326}
+        m_TargetAssemblyTypeName: ProgrammerNPC, Assembly-CSharp
+        m_MethodName: ClickedOption
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &435573518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20697,15 +20709,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 441500, guid: 498a13929c1393e44be1126bcadc448b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 32.704384
+      value: 27.654385
       objectReference: {fileID: 0}
     - target: {fileID: 441500, guid: 498a13929c1393e44be1126bcadc448b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.2261844
+      value: 2.590961
       objectReference: {fileID: 0}
     - target: {fileID: 441500, guid: 498a13929c1393e44be1126bcadc448b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.531403
+      value: 8.061403
       objectReference: {fileID: 0}
     - target: {fileID: 441500, guid: 498a13929c1393e44be1126bcadc448b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -20793,12 +20805,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myID: 1
-  questionText: Write your question here.
-  optionA: Option A
-  optionB: Option B
-  optionC: Option C
-  correctOption: 1
-  successHint: Correct! The next clue is near the fountain.
+  questionText: What type of loop will run at least once, even if the condition is
+    false?
+  optionA: For Loop
+  optionB: While Loop
+  optionC: Do-While Loop
+  correctOption: 3
+  successHint: Correct! The next riddle is in the top floor of the parking building!!!
   lockedMessage: I can't talk to you yet. Help the others first.
   alreadyDoneMessage: System compiled successfully. You may proceed.
   dialoguePanel: {fileID: 1621452623}
@@ -22563,7 +22576,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 899515173}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 812540326}
+        m_TargetAssemblyTypeName: ProgrammerNPC, Assembly-CSharp
+        m_MethodName: CloseWindow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &899515173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33438,7 +33463,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1370782497}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 812540326}
+        m_TargetAssemblyTypeName: ProgrammerNPC, Assembly-CSharp
+        m_MethodName: ClickedOption
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1370782497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37015,7 +37052,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1521826876}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 812540326}
+        m_TargetAssemblyTypeName: ProgrammerNPC, Assembly-CSharp
+        m_MethodName: ClickedOption
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1521826876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39238,7 +39287,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1621452624
 RectTransform:
   m_ObjectHideFlags: 0
@@ -44111,15 +44160,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 435868, guid: 5e488cfd825ce044395037d93a9d8eb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.071091324
+      value: -4.93
       objectReference: {fileID: 0}
     - target: {fileID: 435868, guid: 5e488cfd825ce044395037d93a9d8eb6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5803683
+      value: -1.28
       objectReference: {fileID: 0}
     - target: {fileID: 435868, guid: 5e488cfd825ce044395037d93a9d8eb6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.8723445
+      value: 11.45
       objectReference: {fileID: 0}
     - target: {fileID: 435868, guid: 5e488cfd825ce044395037d93a9d8eb6, type: 3}
       propertyPath: m_LocalRotation.w

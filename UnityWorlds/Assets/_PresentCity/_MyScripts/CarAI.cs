@@ -32,7 +32,9 @@ public class CarAI : MonoBehaviour
         }
 
         // 2. CAR DETECTION: Look ahead for other cars
-        bool isBlockedByCar = Physics.Raycast(transform.position + transform.forward, transform.forward, sensorDistance, obstacleLayer);
+        // FIX: We add (Vector3.up * 1f) to lift the sensor off the ground
+        Vector3 sensorStartPos = transform.position + transform.forward + (Vector3.up * 1f);
+        bool isBlockedByCar = Physics.Raycast(sensorStartPos, transform.forward, sensorDistance, obstacleLayer);
 
         if (isStoppedByLight || isBlockedByCar) return;
 
@@ -72,9 +74,11 @@ public class CarAI : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos() // Visual sensor in Scene View
+    // Visual sensor in Scene View (Updated to match the higher sensor)
+    void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position + transform.forward, transform.forward * sensorDistance);
+        Vector3 sensorStartPos = transform.position + transform.forward + (Vector3.up * 1f);
+        Gizmos.DrawRay(sensorStartPos, transform.forward * sensorDistance);
     }
 }
