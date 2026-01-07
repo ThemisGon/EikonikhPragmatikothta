@@ -27,12 +27,10 @@ public class TrafficLight : MonoBehaviour
 
     void Start()
     {
-        // Initialize if not already done by SetStateManual
         if (mat == null) InitializeMaterial();
         SetLightState();
     }
 
-    // New helper method to handle material setup safely
     private void InitializeMaterial()
     {
         if (originalMat != null)
@@ -52,7 +50,6 @@ public class TrafficLight : MonoBehaviour
             TurnOffLight();
     }
 
-    // UPDATED: This now checks for material initialization to prevent NullReference errors
     public void SetStateManual(string color)
     {
         if (mat == null) InitializeMaterial();

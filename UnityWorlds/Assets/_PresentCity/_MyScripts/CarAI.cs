@@ -6,11 +6,11 @@ public class CarAI : MonoBehaviour
     public Transform[] waypoints;
     public float speed = 8f;
     public float rotationSpeed = 10f;
-    public bool destroyAtEnd = false; // Check this for spawning cars
+    public bool destroyAtEnd = false;
 
     [Header("Detection Settings")]
     public float sensorDistance = 5f;
-    public LayerMask obstacleLayer; // Set to 'Default' or 'Car' in Inspector
+    public LayerMask obstacleLayer;
     public string stopZoneTag = "StopZone";
 
     private int currentWaypointIndex = 0;
@@ -21,7 +21,6 @@ public class CarAI : MonoBehaviour
     {
         if (waypoints == null || waypoints.Length == 0) return;
 
-        // 1. RESTART LOGIC: Check if the blocking cube was disabled by Master
         if (isStoppedByLight)
         {
             if (currentBlockingCube == null || !currentBlockingCube.activeInHierarchy)
@@ -31,14 +30,11 @@ public class CarAI : MonoBehaviour
             }
         }
 
-        // 2. CAR DETECTION: Look ahead for other cars
-        // FIX: We add (Vector3.up * 1f) to lift the sensor off the ground
         Vector3 sensorStartPos = transform.position + transform.forward + (Vector3.up * 1f);
         bool isBlockedByCar = Physics.Raycast(sensorStartPos, transform.forward, sensorDistance, obstacleLayer);
 
         if (isStoppedByLight || isBlockedByCar) return;
 
-        // 3. MOVEMENT & ROTATION
         Transform target = waypoints[currentWaypointIndex];
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -50,13 +46,12 @@ public class CarAI : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        // 4. WAYPOINT SWITCHING & DESPAWNING
         if (Vector3.Distance(transform.position, target.position) < 0.5f)
         {
             if (currentWaypointIndex == waypoints.Length - 1)
             {
                 if (destroyAtEnd) Destroy(gameObject);
-                else currentWaypointIndex = 0; // Loop for circling cars
+                else currentWaypointIndex = 0;
             }
             else
             {
@@ -74,7 +69,6 @@ public class CarAI : MonoBehaviour
         }
     }
 
-    // Visual sensor in Scene View (Updated to match the higher sensor)
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

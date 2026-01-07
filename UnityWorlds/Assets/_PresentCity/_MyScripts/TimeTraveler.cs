@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class TimeTraveler : MonoBehaviour
 {
-    public string sceneToLoad = "FutureScene"; // The exact name of your future scene
+    public string sceneToLoad = "FutureScene";
 
     private void OnTriggerEnter(Collider other)
     {

@@ -32,12 +32,10 @@ public class PedestrianTrafficTimer : MonoBehaviour
         }
     }
 
-    // NEW CLEANER FUNCTION FOR THE MASTER
     public void SetStateManual(string color)
     {
-        // Stop the internal timer immediately
         if (internalTimer != null) StopCoroutine(internalTimer);
-        this.enabled = false; // Disable this script component to prevent restarts
+        this.enabled = false;
 
         if (color.ToLower() == "green")
         {

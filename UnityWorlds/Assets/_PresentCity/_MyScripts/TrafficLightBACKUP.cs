@@ -5,7 +5,7 @@ public class TrafficLightBACKUP : MonoBehaviour
 {
     [Header("Material Settings")]
     public Material originalMat;
-    public float glowIntensity = 30.0f; // Kept at your preferred 30!
+    public float glowIntensity = 30.0f;
 
     [Header("State Textures")]
     public Texture2D greenLight;
@@ -42,10 +42,9 @@ public class TrafficLightBACKUP : MonoBehaviour
             TurnOffLight();
     }
 
-    // THIS IS THE NEW FUNCTION THE MASTER CONTROLLER CALLS
     public void SetStateManual(string color)
     {
-        currentState = LightState.Manual; // Stop the internal timer
+        currentState = LightState.Manual;
         if (lightCoroutine != null) StopCoroutine(lightCoroutine);
 
         switch (color.ToLower())
