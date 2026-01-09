@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class TrafficLight : MonoBehaviour
@@ -14,21 +13,9 @@ public class TrafficLight : MonoBehaviour
 
     private Material mat;
 
-    public enum LightState { Off, On, Emergency, Manual }
-    [Header("Current Configuration")]
-    public LightState currentState = LightState.On;
-
-    [Header("Timing Settings")]
-    public float greenLightDuration = 5f;
-    public float yellowLightDuration = 2f;
-    public float redLightDuration = 5f;
-
-    private Coroutine lightCoroutine;
-
     void Start()
     {
         if (mat == null) InitializeMaterial();
-        SetLightState();
     }
 
     private void InitializeMaterial()
@@ -39,23 +26,9 @@ public class TrafficLight : MonoBehaviour
             GetComponent<Renderer>().material = mat;
         }
     }
-
-    public void SetLightState()
-    {
-        if (lightCoroutine != null) StopCoroutine(lightCoroutine);
-
-        if (currentState == LightState.On)
-            lightCoroutine = StartCoroutine(LightCycle());
-        else if (currentState == LightState.Off)
-            TurnOffLight();
-    }
-
     public void SetStateManual(string color)
     {
         if (mat == null) InitializeMaterial();
-
-        currentState = LightState.Manual;
-        if (lightCoroutine != null) StopCoroutine(lightCoroutine);
 
         switch (color.ToLower())
         {
@@ -63,19 +36,6 @@ public class TrafficLight : MonoBehaviour
             case "yellow": SetEmissionTexture(yellowLight); break;
             case "green": SetEmissionTexture(greenLight); break;
             default: TurnOffLight(); break;
-        }
-    }
-
-    private IEnumerator LightCycle()
-    {
-        while (true)
-        {
-            SetEmissionTexture(redLight);
-            yield return new WaitForSeconds(redLightDuration);
-            SetEmissionTexture(greenLight);
-            yield return new WaitForSeconds(greenLightDuration);
-            SetEmissionTexture(yellowLight);
-            yield return new WaitForSeconds(yellowLightDuration);
         }
     }
 
