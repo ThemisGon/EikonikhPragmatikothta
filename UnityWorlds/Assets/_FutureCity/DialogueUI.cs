@@ -19,6 +19,13 @@ public class DialogueUI : MonoBehaviour
     [Header("Input")]
     [SerializeField] float inputCooldown = 0.12f; // Prevent double-press / instant reopen issues
 
+    [Header("SFX")]
+    [SerializeField] private AudioSource uiSfxSource;      // Optional: assign or auto-get
+    [SerializeField] private AudioClip pressESfx;          // Plays on E press while dialogue is open
+    [Range(0f, 3f)]
+    [SerializeField] private float pressESfxVolume = 1f;
+    [SerializeField] private bool sfxOnlyWhenAdvancingLine = true; // If true: only when going to next line (not on skip typing)
+
     string[] lines;
     int index;
     bool isOpen;
@@ -42,31 +49,52 @@ public class DialogueUI : MonoBehaviour
         // Ensure UI starts hidden
         if (root) root.SetActive(false);
         if (continueText) continueText.gameObject.SetActive(false);
+        if (uiSfxSource == null)
+            uiSfxSource = GetComponent<AudioSource>(); // optional, if DialogueUI object has one
+
     }
 
     void Update()
     {
-        if (!isOpen) return;
-
-        // Cooldown to avoid consuming the same E press multiple times
-        if (Time.time < nextInputTime) return;
-
         if (Input.GetKeyDown(continueKey))
         {
             nextInputTime = Time.time + inputCooldown;
 
+            // Case 1: currently typing -> E skips typing
             if (isTyping)
             {
-                // Skip typing -> show full line immediately
+                if (!sfxOnlyWhenAdvancingLine)
+                    PlayPressESfx(); // optional: play also on skip
+
                 FinishTypingInstant();
                 return;
             }
 
             if (lineFinished)
             {
+                // play SFX ONLY if there is another line
+                if (index + 1 < lines.Length)
+                    PlayPressESfx();
+
                 NextLineOrFinish();
             }
         }
+    }
+    public void PlayUISfx(AudioClip clip, float volume = 1f)
+    {
+        if (clip == null) return;
+
+        if (uiSfxSource == null)
+            uiSfxSource = GetComponent<AudioSource>();
+
+        if (uiSfxSource == null)
+            uiSfxSource = gameObject.AddComponent<AudioSource>();
+
+        uiSfxSource.playOnAwake = false;
+        uiSfxSource.loop = false;
+        uiSfxSource.spatialBlend = 0f; // 2D
+
+        uiSfxSource.PlayOneShot(clip, volume);
     }
 
     /// <summary>
@@ -206,4 +234,20 @@ public class DialogueUI : MonoBehaviour
     }
 
     public bool IsOpen() => isOpen;
+    private void PlayPressESfx()
+    {
+        if (pressESfx == null) return;
+
+        // If no source assigned, use PlayClipAtPoint as a fallback (2D-ish if listener is near camera)
+        if (uiSfxSource == null)
+        {
+            AudioSource.PlayClipAtPoint(pressESfx, Vector3.zero, pressESfxVolume);
+            return;
+        }
+
+        uiSfxSource.PlayOneShot(pressESfx, pressESfxVolume);
+    }
+
+
 }
+

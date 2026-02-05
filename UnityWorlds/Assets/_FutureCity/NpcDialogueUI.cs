@@ -7,6 +7,17 @@ public class NpcDialogueUI : MonoBehaviour
     [TextArea(2, 4)]
     public string[] lines;
 
+    [Header("Look & Talk (optional)")]
+    public NPCLookAndTalk lookAndTalk;
+
+    [Header("Interaction SFX")]
+    [SerializeField] AudioClip startDialogueSfx;
+    [SerializeField] float startDialogueVolume = 1f;
+
+    [Header("Start Interaction SFX")]
+    [SerializeField] private AudioClip startTalkSfx;
+    [Range(0f, 3f)][SerializeField] private float startTalkVolume = 1f;
+
     [Header("Interact")]
     public KeyCode interactKey = KeyCode.E;
     public string playerTag = "Player";
@@ -31,6 +42,8 @@ public class NpcDialogueUI : MonoBehaviour
         // Ensure collider is trigger
         var col = GetComponent<Collider>();
         if (col) col.isTrigger = true;
+        lookAndTalk = GetComponent<NPCLookAndTalk>();
+
     }
 
     void Start()
@@ -67,13 +80,28 @@ public class NpcDialogueUI : MonoBehaviour
         if (lines == null || lines.Length == 0) return;
 
         HidePrompt();
+        if (startTalkSfx != null)
+            AudioSource.PlayClipAtPoint(startTalkSfx, transform.position, startTalkVolume);
+        if (startTalkSfx != null && DialogueUI.Instance != null)
+            DialogueUI.Instance.PlayUISfx(startTalkSfx, startTalkVolume);
+
 
         // Start talking animation while dialogue is open
         SetTalking(true);
+        lookAndTalk?.StartFacing();
         dialogueStartedByThisNpc = true;
 
         if (DialogueUI.Instance != null)
         {
+            if (startDialogueSfx != null)
+            {
+                AudioSource.PlayClipAtPoint(
+                    startDialogueSfx,
+                    transform.position,
+                    startDialogueVolume
+                );
+            }
+
             // Start dialogue and stop talking when finished
             DialogueUI.Instance.StartDialogue(lines, OnDialogueFinished);
         }
@@ -89,9 +117,10 @@ public class NpcDialogueUI : MonoBehaviour
     {
         // Only react if THIS NPC started the dialogue
         if (!dialogueStartedByThisNpc) return;
-
+        lookAndTalk?.StopFacing();
         SetTalking(false);
         dialogueStartedByThisNpc = false;
+        lookAndTalk?.StopFacing();
 
         // Prevent immediate reopen on the same key press timing
         nextInteractTime = Time.time + interactCooldown;
@@ -130,6 +159,7 @@ public class NpcDialogueUI : MonoBehaviour
         // Safety: stop talking state
         SetTalking(false);
         dialogueStartedByThisNpc = false;
+        lookAndTalk?.StopFacing();
 
         nextInteractTime = Time.time + interactCooldown;
     }

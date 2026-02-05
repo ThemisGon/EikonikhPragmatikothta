@@ -22,6 +22,10 @@ public class NPCDialogueGiveCard : MonoBehaviour
     public AudioClip pickupSfx;
     public float sfxVolume = 1f;
 
+    [Header("Start Interaction SFX")]
+    [SerializeField] private AudioClip startTalkSfx;
+    [Range(0f, 3f)][SerializeField] private float startTalkVolume = 1f;
+
     bool playerInRange;
     bool cardGiven;
     bool dialogueStarted;
@@ -51,8 +55,14 @@ public class NPCDialogueGiveCard : MonoBehaviour
             }
 
             dialogueStarted = true;
-            PromptUI.Instance?.Hide();
-            DialogueUI.Instance?.StartDialogue(dialogueLines, OnDialogueFinishedGiveCard);
+PromptUI.Instance?.Hide();
+
+// Play start interaction SFX via UI (2D)
+if (DialogueUI.Instance != null && startTalkSfx != null)
+    DialogueUI.Instance.PlayUISfx(startTalkSfx, startTalkVolume);
+
+DialogueUI.Instance?.StartDialogue(dialogueLines, OnDialogueFinishedGiveCard);
+
         }
     }
 
@@ -67,8 +77,8 @@ public class NPCDialogueGiveCard : MonoBehaviour
         if (cardObjectInHand) cardObjectInHand.SetActive(false);
 
         // Sound
-        if (pickupSfx) AudioSource.PlayClipAtPoint(pickupSfx, transform.position, sfxVolume);
-
+        if (pickupSfx && DialogueUI.Instance != null)
+            DialogueUI.Instance.PlayUISfx(pickupSfx, sfxVolume);
         // Temp message
         PromptUI.Instance?.ShowTemp(pickedMessage, pickedMessageSeconds);
 
