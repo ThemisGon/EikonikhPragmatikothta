@@ -35,7 +35,7 @@ public class CardQuestManager : MonoBehaviour
 
         // Show objective + counter permanently
         UIObjective.Instance?.SetObjective($"Collect {requiredCards} cards to escape");
-        UIObjective.Instance?.SetCardCount(collectedCards, requiredCards);
+        CardIconsUI.Instance?.UpdateIcons(collectedCards);
 
         // Popup message for 2-3 seconds
         PromptUI.Instance?.ShowTemp($"Find {requiredCards} cards to escape!", 3f);
@@ -44,8 +44,7 @@ public class CardQuestManager : MonoBehaviour
     public void AddCard()
     {
         collectedCards++;
-        UIObjective.Instance?.SetCardCount(collectedCards, requiredCards);
-
+        CardIconsUI.Instance?.UpdateIcons(collectedCards);
         if (collectedCards >= requiredCards)
         {
             UIObjective.Instance?.SetObjective("Head to the spaceship");
