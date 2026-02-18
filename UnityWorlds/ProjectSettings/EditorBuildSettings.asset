@@ -6,8 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/futuristic_world.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/main.unity
+    guid: 6192c8fc74718ce4c933f3e12b8a42ab
+  - enabled: 1
+    path: Assets/Scenes/EndingScene.unity
+    guid: 3a2f31955aad8dd4faab54a6d41f8086
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 416db26aa84d8eb4298aad58287aceae
+  - enabled: 1
+    path: Assets/_PresentCity/PresentCity_Final.unity
+    guid: 95cada399b2cf8e4ca6bd494ee48b287
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
