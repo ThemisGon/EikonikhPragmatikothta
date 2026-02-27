@@ -1,6 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Απαραίτητο για να αλλάζουμε πίστες/κόσμους!
-
+using UnityEngine.SceneManagement; 
 public class MinePortal : MonoBehaviour
 {
     [Header("Το Όνομα της Επόμενης Σκηνής")]
@@ -8,14 +7,12 @@ public class MinePortal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Αν μας ακουμπήσει ο Παίκτης...
         if (other.CompareTag("Player"))
         {
-            // ...και ΕΧΕΙ την ασπίδα (άρα έχει ολοκληρώσει το χωριό)
             if (PlayerInventory.hasShield == true)
             {
                 Debug.Log("Τηλεμεταφορά στον επόμενο κόσμο!");
-                SceneManager.LoadScene(nextWorldName); // Φόρτωσε το άλλο μενού/παιχνίδι!
+                SceneManager.LoadScene(nextWorldName); // Φόρτωσε το άλλο παιχνίδι
             }
             else
             {

@@ -4,8 +4,8 @@ using TMPro;
 public class ShieldNPC : MonoBehaviour
 {
     [Header("Διάλογοι")]
-    [TextArea(3, 5)] public string dialogueBefore; // Τι λέει ΠΡΙΝ σου δώσει την ασπίδα
-    [TextArea(3, 5)] public string dialogueAfter;  // Τι λέει ΑΦΟΥ σου τη δώσει
+    [TextArea(3, 5)] public string dialogueBefore; 
+    [TextArea(3, 5)] public string dialogueAfter;  
 
     [Header("UI")]
     public GameObject dialoguePanel;
@@ -22,7 +22,6 @@ public class ShieldNPC : MonoBehaviour
             {
                 dialoguePanel.SetActive(true);
 
-                // ΕΛΕΓΧΟΣ: Έχει ήδη την ασπίδα ο παίκτης;
                 if (PlayerInventory.hasShield == false)
                 {
                     dialogueTextUI.text = dialogueBefore; 
@@ -31,7 +30,8 @@ public class ShieldNPC : MonoBehaviour
                 }
                 else
                 {
-                    dialogueTextUI.text = dialogueAfter; // Έχει ήδη την ασπίδα
+                    dialogueTextUI.text = dialogueAfter; 
+                    dialogueTextUI.text = dialogueAfter; 
                 }
 
                 Time.timeScale = 0f;

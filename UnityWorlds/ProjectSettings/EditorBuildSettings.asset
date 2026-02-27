@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 99eec1e7ba5fc4944855623cd7f102bb
   - enabled: 1
-    path: Assets/Scenes/Medieval_Village_Main.unity
+    path: Assets/_MedievalCity/Medieval_Village_Main.unity
     guid: 8a05ad4b92cfe134ca7317562675beeb
   - enabled: 1
     path: Assets/_PresentCity/PresentCity_Final.unity

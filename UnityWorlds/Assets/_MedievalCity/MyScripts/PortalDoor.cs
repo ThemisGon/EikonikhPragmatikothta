@@ -11,7 +11,7 @@ public class PortalDoor : MonoBehaviour
     public GameObject dialoguePanel;
     public TextMeshProUGUI dialogueTextUI;
     [TextArea(2, 4)]
-    public string lockedMessage = "A magic door keeps the door locked. You have to get the sword & the shield.";
+    public string lockedMessage = "A magic power keeps the door locked. You have to get the sword & the shield.";
 
     private bool isPlayerInRange = false;
     private bool isOpen = false;

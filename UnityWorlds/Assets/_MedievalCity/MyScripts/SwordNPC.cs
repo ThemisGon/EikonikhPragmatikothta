@@ -4,8 +4,8 @@ using TMPro;
 public class SwordNPC : MonoBehaviour
 {
     [Header("Διάλογοι")]
-    [TextArea(3, 5)] public string dialogueBefore; // Τι λέει ΠΡΙΝ σου δώσει το σπαθί
-    [TextArea(3, 5)] public string dialogueAfter;  // Τι λέει ΑΦΟΥ σου το δώσει
+    [TextArea(3, 5)] public string dialogueBefore;
+    [TextArea(3, 5)] public string dialogueAfter;  
 
     [Header("UI")]
     public GameObject dialoguePanel;
@@ -22,7 +22,6 @@ public class SwordNPC : MonoBehaviour
             {
                 dialoguePanel.SetActive(true);
 
-                // ΕΛΕΓΧΟΣ: Έχει ήδη το σπαθί ο παίκτης;
                 if (PlayerInventory.hasSword == false)
                 {
                     dialogueTextUI.text = dialogueBefore;

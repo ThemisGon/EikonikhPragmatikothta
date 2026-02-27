@@ -5,12 +5,12 @@ public class NPCMove : MonoBehaviour
 {
     public Transform target;
     private NavMeshAgent agent;
-    private Animator anim; // 1. Προσθέτουμε τον Animator!
+    private Animator anim; 
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        anim = GetComponent<Animator>(); // 2. Βρίσκει τον Animator του NPC
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -20,8 +20,6 @@ public class NPCMove : MonoBehaviour
             agent.SetDestination(target.position);
         }
 
-        // 3. Στέλνει την τρέχουσα ταχύτητα του NPC στον Animator
-        // Αν το NPC τρέχει, το magnitude είναι π.χ. 6. Αν σταματήσει, είναι 0!
         anim.SetFloat("Speed", agent.velocity.magnitude);
     }
 }

@@ -17,7 +17,7 @@ public class GuardNPC : MonoBehaviour
     public float openSpeed = 2f;
 
     [Header("Ήχοι")]
-    public AudioSource gateSound; // Το Ηχείο μας!
+    public AudioSource gateSound; // Το Ηχείο
 
     private bool isPlayerInRange = false;
     private bool isTalking = false;
@@ -65,7 +65,7 @@ public class GuardNPC : MonoBehaviour
 
                 if (PlayerInventory.hasSword == true)
                 {
-                    if (!isGateOpening) // Για να είμαστε σίγουροι ότι θα παίξει μόνο ΜΙΑ φορά!
+                    if (!isGateOpening) 
                     {
                         isGateOpening = true;
 
